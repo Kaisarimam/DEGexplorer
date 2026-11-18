@@ -108,5 +108,7 @@ if app_dir:
                 "evidence codes: all (IEA and IBA included); NOT-qualified annotations dropped\n"
                 "propagated over: is_a, part_of\n"
                 "genes: identified by gene symbol; matched to the loaded DE table by symbol\n"
-                "built with: data-raw/build_go_table.py --app-dir data/go_release\n")
+                "built with: data-raw/build_go_table.py --app-dir data/go_release\n"
+                "licence: Gene Ontology Consortium data, CC BY 4.0 "
+                "(https://geneontology.org/docs/go-licenses/); (c) Gene Ontology Consortium\n")
     print("app files written to", app_dir)

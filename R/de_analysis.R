@@ -21,7 +21,8 @@ DE_ENGINE_PACKAGES <- list(deseq2 = "DESeq2", limma = c("limma", "edgeR"), edger
 
 #' Install line for a missing engine, or NULL when it is available.
 de_engine_missing <- function(engine) {
-  pkg <- c(DE_ENGINE_PACKAGES, DTU_ENGINE_PACKAGES)[[engine]]
+  pkgs <- if (exists("DTU_ENGINE_PACKAGES")) c(DE_ENGINE_PACKAGES, DTU_ENGINE_PACKAGES) else DE_ENGINE_PACKAGES
+  pkg <- pkgs[[engine]]
   miss <- pkg[!vapply(pkg, requireNamespace, logical(1), quietly = TRUE)]
   if (!length(miss)) return(NULL)
   sprintf("BiocManager::install(c(%s))", paste0('"', miss, '"', collapse = ", "))
@@ -321,8 +322,10 @@ run_de_analysis <- function(counts, sheet, included, main, covariates = characte
                             types = list(), contrasts, engine = "deseq2",
                             options = de_default_options(), progress = NULL, lengths = NULL,
                             transcripts = NULL) {
-  if (is_dtu_engine(engine) || identical(options$feature_level, "dtu")) {
-    if (!is_dtu_engine(engine)) stop("Transcript usage needs a DTU method: ", paste(names(DTU_ENGINES), collapse = ", "), ".")
+  # literal list, so gene-level runs work even when dtu.R is not loaded
+  dtu_keys <- c("edger_dtu", "limma_dtu", "dexseq", "drimseq", "saturn")
+  if (engine %in% dtu_keys || identical(options$feature_level, "dtu")) {
+    if (!engine %in% dtu_keys) stop("Transcript usage needs a DTU method: ", paste(names(DTU_ENGINES), collapse = ", "), ".")
     return(run_dtu_analysis(counts, sheet, included, main, covariates, types, contrasts, engine,
                             options, progress, lengths, transcripts))
   }

@@ -385,11 +385,12 @@ check("GO release needs no org.Hs.eg.db",
 # ---- 11. enrichment gallery -------------------------------------------------
 
 demo_f <- example_enrichment_files(d("example_enrichment"))
-check("four demo enrichment tables are shipped", length(demo_f) == 4)
+check("three GO demo tables are shipped and no KEGG data", length(demo_f) == 3 &&
+        !any(grepl("pathway", basename(demo_f))))
 gimp <- import_enrichment_files(demo_f, de = de_d$data)
 gt   <- gimp$tables
-check("demo tables import as GO BP/CC/MF and KEGG from their file names",
-      identical(names(gt), c("BP", "CC", "MF", "KEGG")) && all(vapply(gt, nrow, 1L) > 50))
+check("demo tables import as GO BP/CC/MF from their file names",
+      identical(names(gt), c("BP", "CC", "MF")) && all(vapply(gt, nrow, 1L) > 50))
 check("demo tables are in the standard nine-column layout",
       all(vapply(demo_f, function(f) identical(colnames(utils::read.csv(f, check.names = FALSE)),
                                                GALLERY_STD_COLS), logical(1))))
@@ -437,7 +438,16 @@ check("KEGG classes are derived from pathway ids",
                   "Organismal Systems", "Organismal Systems", "Human Diseases",
                   "Genetic Information Processing", "Unclassified")))
 
-# every table-driven figure builds and renders
+# every table-driven figure builds and renders. No KEGG table is shipped (KEGG data
+# may not be redistributed), so the KEGG-class figure gets a stand-in table: real
+# pathway-id formats (which carry the class), placeholder names, genes from GO BP.
+if (is.null(gt$KEGG)) {
+  kk <- head(gt$BP, 12)
+  kk$ID <- c("hsa00010", "hsa03010", "hsa04514", "hsa04110", "hsa04713", "hsa05217",
+             "hsa04141", "hsa03320", "hsa04060", "hsa04620", "hsa05164", "hsa04630")[seq_len(nrow(kk))]
+  kk$Description <- paste("Test pathway", seq_len(nrow(kk)))
+  gt$KEGG <- kk
+}
 gal_figs <- c(score_bar = "BP", score_dot = "CC", go3_h = NA, go3_v = NA, sankey = "BP",
               kegg_class = NA, cnet = "MF", emap = "BP")
 for (fg in names(gal_figs)) {

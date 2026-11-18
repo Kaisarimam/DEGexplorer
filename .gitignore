@@ -28,3 +28,5 @@ Thumbs.db
 data/*
 !data/example_*
 !data/go_release/
+# KEGG data may not be redistributed: build it locally (data-raw/make_example_enrichment.R --kegg)
+data/example_enrichment/pathway.all.csv

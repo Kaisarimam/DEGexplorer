@@ -14,6 +14,9 @@ fc <- stats::setNames(de$log2FoldChange, de$display_gene)
 fc <- fc[!is.na(fc) & !duplicated(names(fc))]
 figs <- list(score_bar = "BP", score_dot = "BP", go3_h = NULL, go3_v = NULL, sankey = "BP",
              kegg_class = NULL, cnet = "BP", emap = "BP")
+# The KEGG demo table is built locally only (KEGG data are not redistributed);
+# without it the KEGG figure is left as it is.
+if (!"KEGG" %in% names(tabs)) figs$kegg_class <- NULL
 for (f in names(figs)) {
   obj <- build_gallery_figure(f, tabs, figs[[f]], fc = fc)
   sz <- gallery_figure_size(f)

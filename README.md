@@ -11,6 +11,15 @@ It reads output from **nf-core/differentialabundance** (DESeq2 *and* limma),
 **TPM, FPKM/RPKM, CPM, DESeq2 median-of-ratios and edgeR TMM** matrices directly
 from raw counts (e.g. `rsem.merged.gene_counts.tsv` from **nf-core/rnaseq**).
 
+Its **Analysis** tab runs **DESeq2, limma-voom, edgeR and EBSeq** on gene or
+transcript counts, and tests **differential transcript usage** with edgeR / limma
+diffSplice, DEXSeq, DRIMSeq and satuRn, each set up as its authors recommend,
+with QC, a run record and an R script that reproduces every number.
+
+<img src="man/figures/app_volcano.png" width="49%" alt="Volcano plot of the bundled example"> <img src="man/figures/app_heatmap.png" width="49%" alt="Heatmap of the top DEGs">
+
+<img src="man/figures/app_analysis.png" width="70%" alt="Analysis tab: results, downloads and quality control">
+
 ---
 
 ## Contents
@@ -23,6 +32,7 @@ from raw counts (e.g. `rsem.merged.gene_counts.tsv` from **nf-core/rnaseq**).
 - [Normalisation methods](#normalisation-methods)
 - [Repository layout](#repository-layout)
 - [Notes and limitations](#notes-and-limitations)
+- [How to cite DEGexplorer](#how-to-cite-degexplorer)
 - [Citing the resources used](#citing-the-resources-used)
 - [Licence](#licence)
 
@@ -53,7 +63,17 @@ at any time.
 
 ## Installing R packages
 
-R ≥ 4.2 is recommended.
+R ≥ 4.2 is recommended. `Rscript install_dependencies.R --all` installs
+everything below.
+
+**The exact tested setup.** `renv.lock` records the versions DEGexplorer 1.0.0
+was tested with (R 4.6.1, Bioconductor 3.23). To reproduce them in a project
+library, without touching your other R projects:
+
+```r
+install.packages("renv")
+renv::restore(lockfile = "renv.lock")
+```
 
 **Required** (the app will not start without these):
 
@@ -613,9 +633,11 @@ tables, or run the enrichment on the DEGs you have loaded.
 
 #### Example files for the import option
 
-`data/example_enrichment/` holds four tables in the import layout —
-`go.BP.all.csv`, `go.CC.all.csv`, `go.MF.all.csv` and `pathway.all.csv` — with
-a README describing every column. Under **Example files** in the import option
+`data/example_enrichment/` holds three GO tables in the import layout —
+`go.BP.all.csv`, `go.CC.all.csv` and `go.MF.all.csv` — with a README describing
+every column. No KEGG table is shipped, because KEGG's licence does not allow its
+data to be redistributed; the app fetches KEGG live when you run enrichment, and
+the script below can build a local `pathway.all.csv` with `--kegg`. Under **Example files** in the import option
 you can download them as a `.zip` to use as a template, or import them
 directly to try the figures.
 
@@ -628,17 +650,18 @@ hypergeometric test clusterProfiler runs.
 shipped tables were built from. To rebuild them from the **current official
 Gene Ontology Consortium release** (`go-basic.obo` plus the human GAF from one
 dated release, annotations propagated to ancestor terms, your choice of
-evidence codes) and **current KEGG**, run:
+evidence codes), run:
 
 ```sh
 Rscript data-raw/make_example_enrichment.R                        # latest release
 Rscript data-raw/make_example_enrichment.R --release 2026-06-19   # a pinned release
 Rscript data-raw/make_example_enrichment.R --evidence experimental
+Rscript data-raw/make_example_enrichment.R --kegg                 # also a local KEGG table
 ```
 
 The script needs only base R and an internet connection, and rewrites
-`SOURCE.txt` with the release date, ontology data-version, evidence setting and
-KEGG release it used.
+`SOURCE.txt` with the release date, ontology data-version and evidence setting
+it used (and the KEGG release, with `--kegg`).
 
 #### Significance
 
@@ -783,6 +806,9 @@ DEGexplorer/
 ├── data-raw/                  # rebuilds the example result tables, enrichment tables and README figures
 ├── man/figures/               # gallery figures shown in this README
 ├── tests/smoke_test.R         # end-to-end checks on the bundled data
+├── CITATION.cff               # how to cite (GitHub's "Cite this repository")
+├── NEWS.md                    # release notes
+├── renv.lock                  # package versions the release was tested with
 ├── LICENSE
 └── README.md
 ```
@@ -870,6 +896,19 @@ browser once it has been verified non-empty.
 
 ---
 
+## How to cite DEGexplorer
+
+If DEGexplorer contributes to your work, please cite it. GitHub's **"Cite this
+repository"** button (from [`CITATION.cff`](CITATION.cff)) gives the reference in
+APA and BibTeX:
+
+> Imam, M. K. *DEGexplorer: an interactive workbench for RNA-seq differential
+> expression, transcript expression and transcript usage* (version 1.0.0).
+> CSIR-Institute of Genomics and Integrative Biology / Academy of Scientific and
+> Innovative Research. https://github.com/Kaisarimam/DEGexplorer
+
+Please also cite the analysis methods you used, listed below.
+
 ## Citing the resources used
 
 If a figure from this app ends up in a manuscript, please cite the underlying
@@ -883,4 +922,16 @@ gene sets, and MyGene.info / Europe PMC if you used the live lookups.
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE).
+DEGexplorer is released under the MIT licence — see [LICENSE](LICENSE).
+
+**Third-party data shipped with it.** `data/go_release/` and the GO tables in
+`data/example_enrichment/` are derived from Gene Ontology Consortium data
+(ontology and UniProt-GOA human annotations, release 2026-07-26), distributed
+under the [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
+licence; © Gene Ontology Consortium. Cite: Gene Ontology Consortium,
+*Genetics* 2023, 224(1):iyad031, and Ashburner et al., *Nat Genet* 2000, 25:25–29.
+No KEGG data are redistributed: KEGG pathways are fetched live from the KEGG
+REST API when you run an analysis, under KEGG's own terms
+(https://www.kegg.jp/kegg/legal.html). The example dataset is anonymised RNA-seq
+data (see `data/example_samplesheet.csv`); sample labels and values do not
+identify the original study.

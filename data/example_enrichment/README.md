@@ -1,6 +1,6 @@
 # Example enrichment tables
 
-Four tables in the layout the **Enrichment gallery → Import my enrichment
+Three tables in the layout the **Enrichment gallery → Import my enrichment
 tables** option reads. Use them as a template for your own files, or import
 them as they are to try the figures.
 
@@ -9,13 +9,21 @@ them as they are to try the figures.
 | `go.BP.all.csv` | GO: Biological process |
 | `go.CC.all.csv` | GO: Cellular component |
 | `go.MF.all.csv` | GO: Molecular function |
-| `pathway.all.csv` | KEGG pathway |
+
+KEGG pathway results are **not shipped**: KEGG's licence does not allow its data
+to be redistributed. In the app, *Run GO + KEGG on the current DEGs* fetches KEGG
+live for your own analysis, and `data-raw/make_example_enrichment.R --kegg`
+builds a local `pathway.all.csv` in this layout (it is git-ignored).
+
+The GO tables are derived from Gene Ontology Consortium data, which is
+distributed under CC BY 4.0 (geneontology.org/docs/go-licenses): © Gene
+Ontology Consortium, with annotations from UniProt-GOA.
 
 ## Columns
 
 | Column | Meaning |
 |---|---|
-| `ID` | term accession (`GO:0051607`, `hsa05160`) |
+| `ID` | term accession (`GO:0051607`; `hsa05160` for KEGG) |
 | `Description` | term name |
 | `GeneRatio` | DEGs in the term / DEGs annotated in this database |
 | `BgRatio` | background genes in the term / background genes annotated |
@@ -58,8 +66,9 @@ The script needs an internet connection and base R only. It:
   alternate ids are mapped to their primary term and obsolete terms removed;
 - applies the **evidence-code choice** you give it: `--evidence all` (default,
   IEA and IBA included), `no-iea`, or `experimental`;
-- takes **KEGG** pathways, gene links and names from the live KEGG REST API
-  (academic use; `--no-kegg` skips this);
+- with `--kegg` only, takes **KEGG** pathways, gene links and names from the
+  live KEGG REST API (academic use) and writes a local, git-ignored
+  `pathway.all.csv`;
 - **records the release** — the ontology data-version, the annotation file's
   date, the evidence and relation settings, and the KEGG release — in
   `SOURCE.txt`.

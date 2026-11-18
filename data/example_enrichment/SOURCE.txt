@@ -1,6 +1,6 @@
 Provenance of the example enrichment tables in this folder
 ===========================================================
-Built on:               2026-11-15
+Built on:               2026-11-18
 Built by:               data-raw/make_example_enrichment.R --go-obo ../go-basic.obo --gaf ../HUMAN-uniprot.gaf.gz
 
 Gene Ontology
@@ -13,7 +13,7 @@ Gene Ontology
   propagated over:      is_a, part_of
 
 KEGG
-  KEGG REST API, release not reported; retrieved 2026-11-15
+  not included: KEGG data are not redistributed with DEGexplorer (KEGG licence); run with --kegg to build pathway.all.csv locally
 
 Demo study
   data/example_deseq2_results.tsv.gz: 202 DEGs (adj. P <= 0.05, |log2FC| >= 1),
@@ -24,4 +24,3 @@ Tables
   go.BP.all.csv     1942 terms,  361 with p < 0.05,  125 with adj. P < 0.05
   go.CC.all.csv      241 terms,   49 with p < 0.05,   16 with adj. P < 0.05
   go.MF.all.csv      342 terms,   57 with p < 0.05,   12 with adj. P < 0.05
-  pathway.all.csv    180 terms,   23 with p < 0.05,   13 with adj. P < 0.05

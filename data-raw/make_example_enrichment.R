@@ -1,12 +1,13 @@
 # =============================================================================
 # make_example_enrichment.R -- (re)build data/example_enrichment/ from the
-# current official Gene Ontology release and current KEGG.
+# current official Gene Ontology release (and, for local use only, current KEGG).
 #
 #   Rscript data-raw/make_example_enrichment.R                 # latest release
 #   Rscript data-raw/make_example_enrichment.R --release 2026-06-19
 #   Rscript data-raw/make_example_enrichment.R --evidence experimental
 #   Rscript data-raw/make_example_enrichment.R --go-obo go-basic.obo \
-#           --gaf HUMAN-uniprot.gaf.gz --no-kegg               # files on disk
+#           --gaf HUMAN-uniprot.gaf.gz                         # files on disk
+#   Rscript data-raw/make_example_enrichment.R --kegg          # also pathway.all.csv (local only)
 #
 # Run from the repository root. Base R only -- no Bioconductor needed.
 #
@@ -15,9 +16,12 @@
 #          SAME dated Gene Ontology Consortium release. The release date and
 #          the ontology data-version are read from the files themselves and
 #          written to data/example_enrichment/SOURCE.txt.
-#   KEGG   the KEGG REST API (pathway names, gene-pathway links, gene symbols),
-#          with the KEGG release string recorded alongside. KEGG's REST API is
-#          provided for academic use; see https://www.kegg.jp/kegg/rest/.
+#   KEGG   only with --kegg: the KEGG REST API (pathway names, gene-pathway links,
+#          gene symbols), with the KEGG release string recorded alongside. KEGG's
+#          REST API is provided for academic use and KEGG data may not be
+#          redistributed (https://www.kegg.jp/kegg/legal.html), so pathway.all.csv
+#          is NOT shipped with DEGexplorer (it is listed in .gitignore). Build it
+#          locally if you want the KEGG demo table and the KEGG README figure.
 #
 # Method
 #   gene set   DEGs of data/example_deseq2_results.tsv.gz with adj. P <= 0.05
@@ -42,7 +46,7 @@
 #   --go-obo FILE --gaf FILE     use files already on disk (must be one release)
 #   --kegg-dir DIR         use saved KEGG REST replies: pathway.txt, link.txt,
 #                          genes.txt, info.txt
-#   --no-kegg              leave pathway.all.csv untouched
+#   --kegg                 also build pathway.all.csv from KEGG (local use only)
 #   --out DIR              output directory (default data/example_enrichment)
 # =============================================================================
 
@@ -213,8 +217,9 @@ for (o in names(ns)) {
 
 # ---- 3. KEGG, current -------------------------------------------------------
 
-kegg_info <- "not rebuilt (--no-kegg)"
-if (!has("--no-kegg")) {
+kegg_info <- paste("not included: KEGG data are not redistributed with DEGexplorer (KEGG licence);",
+                   "run with --kegg to build pathway.all.csv locally")
+if (has("--kegg")) {
   kd <- opt("--kegg-dir")
   kget <- function(name, url) if (!is.null(kd)) file.path(kd, name) else
     fetch(url, file.path(cache, name))

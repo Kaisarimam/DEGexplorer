@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use DEGexplorer in your work, please cite it as below, together with the analysis methods you used (see the README)."
+title: "DEGexplorer: an interactive workbench for RNA-seq differential expression, transcript expression and transcript usage"
+type: software
+authors:
+  - family-names: Imam
+    given-names: Md Kaisar
+    affiliation: "CSIR-Institute of Genomics and Integrative Biology (CSIR-IGIB), New Delhi 110007, India; Academy of Scientific and Innovative Research (AcSIR), Ghaziabad 201002, India"
+repository-code: "https://github.com/Kaisarimam/DEGexplorer"
+license: MIT
+version: 1.0.0
+abstract: >-
+  DEGexplorer is an R/Shiny application for running and exploring RNA-seq
+  differential analyses. It runs DESeq2, limma-voom, edgeR and EBSeq on gene
+  or transcript counts, tests differential transcript usage with edgeR / limma
+  diffSplice, DEXSeq, DRIMSeq and satuRn, and offers stage-wise testing with
+  stageR, each configured as recommended by the method's authors. Results are
+  explored through volcano, MA, scatter, PCA and heatmap figures, GO / KEGG /
+  MSigDB enrichment with a gallery of publication figures, and a gene
+  intelligence panel. Every analysis can be exported with a run record and an R
+  script that reproduces it.
+keywords:
+  - RNA-seq
+  - differential expression
+  - differential transcript usage
+  - Shiny
+  - Bioconductor
+  - DESeq2
+  - edgeR
+  - limma
+  - enrichment analysis
+  - reproducible research

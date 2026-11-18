@@ -16,7 +16,8 @@
 # The annotation columns come from data/example_annotation.tsv.gz (Ensembl GTF fields).
 # =============================================================================
 suppressMessages({
-  for (f in c("utils_io.R", "utils_normalise.R", "de_analysis.R")) source(file.path("R", f))
+  for (f in c("utils_io.R", "utils_normalise.R", "organisms.R", "transcripts.R", "de_analysis.R", "dtu.R"))
+    source(file.path("R", f))
   library(DESeq2)
 })
 cnt  <- read_matrix_auto("data/example_rsem_gene_counts.tsv.gz")
