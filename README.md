@@ -902,7 +902,7 @@ If DEGexplorer contributes to your work, please cite it. GitHub's **"Cite this
 repository"** button (from [`CITATION.cff`](CITATION.cff)) gives the reference in
 APA and BibTeX:
 
-> Imam, M. K. *DEGexplorer: an interactive workbench for RNA-seq differential
+> Imam, M. K. ([ORCID 0009-0002-2543-5513](https://orcid.org/0009-0002-2543-5513)). *DEGexplorer: an interactive workbench for RNA-seq differential
 > expression, transcript expression and transcript usage* (version 1.0.0).
 > CSIR-Institute of Genomics and Integrative Biology / Academy of Scientific and
 > Innovative Research. https://github.com/Kaisarimam/DEGexplorer

@@ -5,6 +5,7 @@ type: software
 authors:
   - family-names: Imam
     given-names: Md Kaisar
+    orcid: "https://orcid.org/0009-0002-2543-5513"
     affiliation: "CSIR-Institute of Genomics and Integrative Biology (CSIR-IGIB), New Delhi 110007, India; Academy of Scientific and Innovative Research (AcSIR), Ghaziabad 201002, India"
 repository-code: "https://github.com/Kaisarimam/DEGexplorer"
 license: MIT
