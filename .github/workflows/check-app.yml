@@ -1,0 +1,47 @@
+name: check-app
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::shiny
+            any::ggplot2
+            any::ggrepel
+            any::pheatmap
+            any::DT
+            any::readr
+            any::RColorBrewer
+            any::matrixStats
+            any::shinyjs
+            any::colourpicker
+            any::shinythemes
+            any::openxlsx
+            any::gridExtra
+            any::zip
+
+      - name: Parse every source file
+        run: |
+          Rscript -e 'for (f in c(list.files("R", full.names = TRUE), "app.R")) { invisible(parse(f)); cat("OK", f, "\n") }'
+
+      - name: Smoke-test the analysis functions on the bundled example
+        run: Rscript tests/smoke_test.R
+
+      - name: Build the Shiny app object
+        run: |
+          Rscript -e 'app <- source("app.R")$value; stopifnot(inherits(app, "shiny.appobj")); cat("app object OK\n")'

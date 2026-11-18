@@ -1,0 +1,30 @@
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+.Renviron
+
+# rsconnect / shinyapps.io
+rsconnect/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editors
+.vscode/
+.idea/
+
+# app output
+*.tiff
+*.pdf
+*.png
+!inst/**/*.png
+!man/figures/*.png
+
+# user data (keep the bundled example)
+data/*
+!data/example_*
+!data/go_release/
