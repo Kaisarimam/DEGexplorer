@@ -924,11 +924,15 @@ tx_map <- data.frame(transcript_id = tx_id, gene_id = rownames(g_m)[tx_rows],
                      gene_name = catg$symbol[match(rownames(g_m)[tx_rows], catg$gene_id)],
                      transcript_name = paste0(catg$symbol[match(rownames(g_m)[tx_rows], catg$gene_id)], "-", 200 + sequence(niso)))
 q_tx <- read_quant_dirs(tx_root)
+# Overdispersion comes from edgeR's catchSalmon; without edgeR the counts and
+# lengths are still read and the overdispersion is left out.
 check("Salmon folders give counts, effective lengths and overdispersion", {
-  identical(dim(q_tx$counts), dim(tx_cnt)) && identical(q_tx$tool, "salmon") && !is.null(q_tx$overdispersion) &&
-    all(q_tx$overdispersion >= 1) &&
-    # more isoforms -> more ambiguity
-    median(q_tx$overdispersion[niso[tx_rows] == 4]) > 2 * median(q_tx$overdispersion[niso[tx_rows] == 1]) })
+  identical(dim(q_tx$counts), dim(tx_cnt)) && identical(q_tx$tool, "salmon") &&
+    if (requireNamespace("edgeR", quietly = TRUE))
+      !is.null(q_tx$overdispersion) && all(q_tx$overdispersion >= 1) &&
+        # more isoforms -> more ambiguity
+        median(q_tx$overdispersion[niso[tx_rows] == 4]) > 2 * median(q_tx$overdispersion[niso[tx_rows] == 1])
+    else is.null(q_tx$overdispersion) })
 check("without resamples there is no overdispersion and the note says how to get it", {
   r2 <- file.path(tempdir(), "salmon_noboot"); unlink(r2, recursive = TRUE); dir.create(r2)
   for (smp in colnames(tx_cnt)[1:2]) {
@@ -1133,11 +1137,11 @@ if (!is.null(dtu_runs$edger_dtu)) check("edgeR diffSplice log2FoldChange is on t
   b <- coef(lm(d$log2FoldChange[s] ~ x))[2]
   cat(sprintf("     slope %.3f over %d transcripts\n", b, sum(s)))
   sum(s) >= 6 && b > 0.8 && b < 1.25 })
-check("a DTU run without a transcript-to-gene map stops with an explanation", {
+if (is.null(de_engine_missing("edger_dtu"))) check("a DTU run without a transcript-to-gene map stops with an explanation", {
   e <- tryCatch(run_de_analysis(cnt19, ss19, ss19$sample, "condition", character(0), ty19, cons19[1, ], "edger_dtu",
                                 list(feature_level = "dtu"), transcripts = list(tx2gene = NULL)), error = function(e) conditionMessage(e))
   grepl("transcript-to-gene map", e) })
-check("DTU results reload as a transcript table and map to unique genes for enrichment", {
+if (length(dtu_runs)) check("DTU results reload as a transcript table and map to unique genes for enrichment", {
   r <- dtu_runs[[1]]; st <- standardise_de_table(de_result_for_export(r, names(r$results)[1]))$data
   g <- enrichment_ids(st, st$gene_id[1:40])
   "parent_gene_id" %in% colnames(st) && !anyDuplicated(g) && all(g %in% gid19) })
