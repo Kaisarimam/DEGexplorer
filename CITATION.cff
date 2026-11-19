@@ -10,6 +10,15 @@ authors:
 repository-code: "https://github.com/Kaisarimam/DEGexplorer"
 license: MIT
 version: 1.0.0
+date-released: "2026-11-19"
+doi: "10.5281/zenodo.24370298"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24370298"
+    description: "Concept DOI: always resolves to the latest version"
+  - type: doi
+    value: "10.5281/zenodo.24370299"
+    description: "DOI of version 1.0.0"
 abstract: >-
   DEGexplorer is an R/Shiny application for running and exploring RNA-seq
   differential analyses. It runs DESeq2, limma-voom, edgeR and EBSeq on gene

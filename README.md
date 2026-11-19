@@ -1,5 +1,7 @@
 # DEGexplorer
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24370298.svg)](https://doi.org/10.5281/zenodo.24370298)
+
 An interactive R/Shiny workbench for exploring RNA-seq differential expression
 results: publication-quality **volcano**, **MA**, **expression-scatter**,
 **PCA + scree** and **heatmap** figures, **GO / KEGG / MSigDB** enrichment, an
@@ -902,10 +904,15 @@ If DEGexplorer contributes to your work, please cite it. GitHub's **"Cite this
 repository"** button (from [`CITATION.cff`](CITATION.cff)) gives the reference in
 APA and BibTeX:
 
-> Imam, M. K. ([ORCID 0009-0002-2543-5513](https://orcid.org/0009-0002-2543-5513)). *DEGexplorer: an interactive workbench for RNA-seq differential
-> expression, transcript expression and transcript usage* (version 1.0.0).
-> CSIR-Institute of Genomics and Integrative Biology / Academy of Scientific and
-> Innovative Research. https://github.com/Kaisarimam/DEGexplorer
+> Imam, M. K. ([ORCID 0009-0002-2543-5513](https://orcid.org/0009-0002-2543-5513)). (2026). *DEGexplorer: an interactive
+> workbench for RNA-seq differential expression, transcript expression and
+> transcript usage* (version 1.0.0) [Computer software]. Zenodo.
+> https://doi.org/10.5281/zenodo.24370299
+
+Each release is archived on Zenodo. Cite the version you used
+(1.0.0: [10.5281/zenodo.24370299](https://doi.org/10.5281/zenodo.24370299)), or
+cite [10.5281/zenodo.24370298](https://doi.org/10.5281/zenodo.24370298), the
+concept DOI, which always resolves to the latest version.
 
 Please also cite the analysis methods you used, listed below.
 
